@@ -1,7 +1,5 @@
 FROM openjdk:17
 
-COPY ./app-0.0.1-SNAPSHOT.jar /app/
-
 EXPOSE 8080
 
-ENTRYPOINT ["java", "-jar", "/app/my-spring-boot-app.jar"]
+ENTRYPOINT ["java", "-jar", "/my-spring-boot-app.jar"]
