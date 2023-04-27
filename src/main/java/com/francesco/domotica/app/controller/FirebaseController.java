@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.francesco.domotica.app.configuration.firebaseConf;
+import com.francesco.domotica.app.model.Timer;
 
 @RestController
 public class FirebaseController {
@@ -15,11 +16,10 @@ public class FirebaseController {
     @Autowired
     firebaseConf conf;
     
-    private Map<String, Object> timerCache = new HashMap<>();
+    private Map<String, Timer> timerCache = new HashMap<>();
 
     @GetMapping("/timer")
-    public Map<String, Object> showtimer() {
-
+    public Map<String, Timer> showtimer() {
         timerCache = conf.getTimerCache();
         return timerCache;
     }

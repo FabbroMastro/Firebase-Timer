@@ -1,5 +1,7 @@
-FROM openjdk:17
+FROM openjdk:17-jdk-slim
+
+WORKDIR /app
 
 EXPOSE 8080
 
-ENTRYPOINT ["java", "-jar", "my-spring-boot-app.jar"]
+ENTRYPOINT ["java", "-jar", "app-0.0.1-SNAPSHOT.jar"]

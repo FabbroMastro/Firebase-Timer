@@ -10,7 +10,6 @@ import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.database.*;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,9 +17,7 @@ import java.util.Map;
 public class firebaseConf {
 
     static FirebaseApp app;
-    static Object object;
-    Map<String, Object> timerCache = new HashMap<>();;
-
+    Map<String, Timer> timerCache = new HashMap<>();
 
     @Bean
     public static void firebaseConfing() throws Exception {
@@ -34,18 +31,18 @@ public class firebaseConf {
             app = FirebaseApp.initializeApp(options);
         }
     }
+
     @Bean
-    public void listenTimer(){
+    public void listenTimer() {
         FirebaseDatabase database = FirebaseDatabase.getInstance(app);
-
         DatabaseReference ref = database.getReference("timer");
-
         ref.addValueEventListener(new ValueEventListener() {
 
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                    object = dataSnapshot.getValue();
-                    timerCache.put("timer", object);
+            
+                Timer timer = dataSnapshot.getValue(Timer.class);
+                timerCache.put("timer", timer);                
             }
 
             @Override
@@ -55,7 +52,8 @@ public class firebaseConf {
         });
     }
 
-    public Map<String, Object> getTimerCache() {
+    public Map<String, Timer> getTimerCache() {
+       System.out.println(timerCache.get("timer"));
         return timerCache;
     }
 
