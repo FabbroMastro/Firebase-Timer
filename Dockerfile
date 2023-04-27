@@ -1,6 +1,6 @@
 FROM openjdk:17-jdk-slim
 
-WORKDIR /app
+WORKDIR /
 
 EXPOSE 8080
 
