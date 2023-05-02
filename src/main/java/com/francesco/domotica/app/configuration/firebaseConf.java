@@ -1,28 +1,32 @@
 package com.francesco.domotica.app.configuration;
 
 import java.io.FileInputStream;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import com.francesco.domotica.app.model.Timer;
+import com.francesco.domotica.app.model.FirebaseTimer;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.database.*;
-import java.util.HashMap;
-import java.util.Map;
 
 @Configuration
 public class firebaseConf {
 
     static FirebaseApp app;
-    Map<String, Timer> timerCache = new HashMap<>();
+    FirebaseTimer timer;    
+
+
+    public firebaseConf() {
+    }
 
     @Bean
-    public static void firebaseConfing() throws Exception {
+    public void firebaseConfing() throws Exception {
         FileInputStream refreshToken = new FileInputStream(
-                "C:\\Users\\Francesco\\Desktop\\app\\src\\main\\resources\\domotica.json");
+                ".\\domotica.json");
         FirebaseOptions options = FirebaseOptions.builder()
                 .setCredentials(GoogleCredentials.fromStream(refreshToken))
                 .setDatabaseUrl("https://domotica-eb57a-default-rtdb.firebaseio.com/")
@@ -40,21 +44,44 @@ public class firebaseConf {
 
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-            
-                Timer timer = dataSnapshot.getValue(Timer.class);
-                timerCache.put("timer", timer);                
+                timer = dataSnapshot.getValue(FirebaseTimer.class);               
             }
-
             @Override
             public void onCancelled(DatabaseError error) {
                 System.out.println(error.getMessage());
             }
         });
     }
+    public FirebaseTimer getTimer() {
+        return timer;
+    }
 
-    public Map<String, Timer> getTimerCache() {
-       System.out.println(timerCache.get("timer"));
-        return timerCache;
+    public void writeTimerToFirebase(FirebaseTimer timer) {
+        // Get the Firebase database reference
+        FirebaseDatabase database = FirebaseDatabase.getInstance(app);
+        DatabaseReference ref = database.getReference("timer");
+        // Set the data
+        ref.setValueAsync(timer);
+        
+        Timer rtimer = new Timer();
+        long seconds = timer.getStartdate();
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                deleteTimerFromFirebase();
+            }
+        };
+        rtimer.schedule(task, seconds * 1000);
+    }
+
+    public void deleteTimerFromFirebase() {
+
+        // Get the Firebase database reference
+        FirebaseDatabase database = FirebaseDatabase.getInstance(app);
+        DatabaseReference ref = database.getReference("timer");
+
+        // Delete the data
+        ref.setValueAsync(null);
     }
 
 }
