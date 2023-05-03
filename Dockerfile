@@ -1,5 +1,12 @@
 FROM openjdk:17-jdk-slim
 
+
+RUN apt-get update && apt-get install -y maven
+
+ENV M2_HOME /usr/local/maven
+ENV M2_PATH $M2_HOME/bin
+ENV PATH $PATH:$M2_PATH
+
 # Set the working directory to /app
 WORKDIR /app
 
