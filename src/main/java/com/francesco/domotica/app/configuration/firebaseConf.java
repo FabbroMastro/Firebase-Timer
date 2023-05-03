@@ -2,6 +2,7 @@ package com.francesco.domotica.app.configuration;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -36,52 +37,33 @@ public class firebaseConf {
             }
     }
 
-    @Bean
-    public void listenTimer() {
-        FirebaseDatabase database = FirebaseDatabase.getInstance(app);
-        DatabaseReference ref = database.getReference("timer");
-        ref.addValueEventListener(new ValueEventListener() {
-
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                timer = dataSnapshot.getValue(FirebaseTimer.class);               
-            }
-            @Override
-            public void onCancelled(DatabaseError error) {
-                System.out.println(error.getMessage());
-            }
-        });
-    }
-    public FirebaseTimer getTimer() {
-        return timer;
-    }
-
-    public void writeTimerToFirebase(FirebaseTimer timer) {
+    public Date writeTimerToFirebase(FirebaseTimer timer) {
         // Get the Firebase database reference
         FirebaseDatabase database = FirebaseDatabase.getInstance(app);
-        DatabaseReference ref = database.getReference("timer");
+        DatabaseReference ref = database.getReference("relay");
         // Set the data
-        ref.setValueAsync(timer);
+        ref.setValueAsync(0);
         
         Timer rtimer = new Timer();
-        long seconds = timer.getStartdate();
+        Date date = new Date();
+
+        long finish =  timer.getEnddate() * 1000;
+        
+        date.setTime(date.getTime() + finish);
+
         TimerTask task = new TimerTask() {
             @Override
             public void run() {
-                deleteTimerFromFirebase();
+
+                if(new Date().compareTo(date) == 0 ){
+                    ref.setValueAsync(1);
+                    rtimer.cancel();
+                }
             }
         };
-        rtimer.schedule(task, seconds * 1000);
+        rtimer.scheduleAtFixedRate(task,0,1000);
+        return date;
     }
 
-    public void deleteTimerFromFirebase() {
-
-        // Get the Firebase database reference
-        FirebaseDatabase database = FirebaseDatabase.getInstance(app);
-        DatabaseReference ref = database.getReference("timer");
-
-        // Delete the data
-        ref.setValueAsync(null);
-    }
 
 }
