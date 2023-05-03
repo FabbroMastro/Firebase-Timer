@@ -6,8 +6,10 @@ WORKDIR /app
 # Copy the current directory contents into the container at /app
 COPY . /app
 
+RUN mvn dependency:go-offline
+
 # Run Maven to build the application
-RUN ./mvnw package
+RUN mvn package
 
 # Make port 8080 available to the world outside this container
 EXPOSE 8080
