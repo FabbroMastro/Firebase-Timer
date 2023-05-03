@@ -2,7 +2,7 @@ FROM openjdk:17-jdk-slim
 
 EXPOSE 8080
 
-COPY domotica.json app/domotica.json
+COPY domotica.json .
 
 COPY app.jar /app/app.jar
 

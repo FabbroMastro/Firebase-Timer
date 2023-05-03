@@ -25,8 +25,8 @@ public class firebaseConf {
     }
 
     @Bean
-    public void firebaseConfing() {
-        try (FileInputStream refreshToken = new FileInputStream("/etc/secrets/domotica.json")) {
+    public void firebaseConfing() throws IOException  {
+            FileInputStream refreshToken = new FileInputStream("domotica.json");
             FirebaseOptions options = FirebaseOptions.builder()
                     .setCredentials(GoogleCredentials.fromStream(refreshToken))
                     .setDatabaseUrl("https://domotica-eb57a-default-rtdb.firebaseio.com/")
@@ -34,23 +34,6 @@ public class firebaseConf {
             if (app == null) {
                 app = FirebaseApp.initializeApp(options);
             }
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        try (FileInputStream refreshToken = new FileInputStream("domotica.json")) {
-            FirebaseOptions options = FirebaseOptions.builder()
-                    .setCredentials(GoogleCredentials.fromStream(refreshToken))
-                    .setDatabaseUrl("https://domotica-eb57a-default-rtdb.firebaseio.com/")
-                    .build();
-            if (app == null) {
-                app = FirebaseApp.initializeApp(options);
-            }
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-
     }
 
     @Bean
