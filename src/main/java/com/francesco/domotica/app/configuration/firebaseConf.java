@@ -20,6 +20,8 @@ public class firebaseConf {
 
     static FirebaseApp app;
     FirebaseTimer timer;    
+    Date date;
+    Timer rtimer = new Timer();
 
 
     public firebaseConf() {
@@ -37,33 +39,39 @@ public class firebaseConf {
             }
     }
 
-    public Date writeTimerToFirebase(FirebaseTimer timer) {
+    public void writeTimerToFirebase(FirebaseTimer timer) {
         // Get the Firebase database reference
         FirebaseDatabase database = FirebaseDatabase.getInstance(app);
         DatabaseReference ref = database.getReference("relay");
         // Set the data
         ref.setValueAsync(0);
         
-        Timer rtimer = new Timer();
-        Date date = new Date();
-
+        date = new Date();
         long finish =  timer.getEnddate() * 1000;
-        
         date.setTime(date.getTime() + finish);
 
         TimerTask task = new TimerTask() {
             @Override
             public void run() {
-
-                if(new Date().compareTo(date) == 0 ){
+                if(new Date().compareTo(date) > 0 ){
                     ref.setValueAsync(1);
                     rtimer.cancel();
                 }
             }
         };
         rtimer.scheduleAtFixedRate(task,0,1000);
-        return date;
+    }
+    public void cancelTimer(){
+        // Get the Firebase database reference
+        FirebaseDatabase database = FirebaseDatabase.getInstance(app);
+        DatabaseReference ref = database.getReference("relay");
+        // Set the data
+        ref.setValueAsync(1);
+
+        rtimer.cancel();
     }
 
-
+    public Date getTimer(){
+        return date;
+    }
 }
