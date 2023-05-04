@@ -21,7 +21,7 @@ public class firebaseConf {
     static FirebaseApp app;
     FirebaseTimer timer;    
     Date date;
-    Timer rtimer = new Timer();
+    Timer rtimer;
 
 
     public firebaseConf() {
@@ -45,6 +45,8 @@ public class firebaseConf {
         DatabaseReference ref = database.getReference("relay");
         // Set the data
         ref.setValueAsync(0);
+
+        rtimer = new Timer();
         
         date = new Date();
         long finish =  timer.getEnddate() * 1000;
