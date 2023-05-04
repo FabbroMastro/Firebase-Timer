@@ -22,6 +22,7 @@ public class firebaseConf {
     FirebaseTimer timer;    
     Date date;
     Timer rtimer;
+    long finish;
 
 
     public firebaseConf() {
@@ -49,16 +50,18 @@ public class firebaseConf {
         rtimer = new Timer();
         
         date = new Date();
-        long finish =  timer.getEnddate() * 1000;
-        date.setTime(date.getTime() + finish);
+        finish =  timer.getStartdate() * 1000;
+        date.setTime(timer.getEnddate());
 
         TimerTask task = new TimerTask() {
             @Override
             public void run() {
-                if(new Date().compareTo(date) > 0 ){
+                
+                if(new Date(timer.getEnddate() - finish).compareTo(date) == 0 ){
                     ref.setValueAsync(1);
                     rtimer.cancel();
                 }
+                finish = finish - 1000;
             }
         };
         rtimer.scheduleAtFixedRate(task,0,1000);
