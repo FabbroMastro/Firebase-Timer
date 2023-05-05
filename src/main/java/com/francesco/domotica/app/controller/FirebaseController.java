@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 
 @RestController
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "https://comforting-blini-f8927b.netlify.app/")
 public class FirebaseController {
 
     @Autowired
