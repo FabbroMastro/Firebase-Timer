@@ -24,10 +24,6 @@ public class firebaseConf {
     Timer rtimer;
     long finish;
 
-
-    public firebaseConf() {
-    }
-
     @Bean
     public void firebaseConfing() throws IOException  {
             FileInputStream refreshToken = new FileInputStream("domotica.json");
@@ -48,8 +44,8 @@ public class firebaseConf {
         ref.setValueAsync(0);
 
         rtimer = new Timer();
-        
         date = new Date();
+
         finish =  timer.getStartdate() * 1000;
         date.setTime(timer.getEnddate());
 
@@ -58,8 +54,7 @@ public class firebaseConf {
             public void run() {
                 
                 if(new Date(timer.getEnddate() - finish).compareTo(date) == 0 ){
-                    ref.setValueAsync(1);
-                    rtimer.cancel();
+                    cancelTimer();
                 }
                 finish = finish - 1000;
             }
@@ -72,7 +67,7 @@ public class firebaseConf {
         DatabaseReference ref = database.getReference("relay");
         // Set the data
         ref.setValueAsync(1);
-
+        date = null;
         rtimer.cancel();
     }
 

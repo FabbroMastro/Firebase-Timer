@@ -3,22 +3,22 @@ package com.francesco.domotica.app.model;
 public class FirebaseTimer
 {
     // Attributes
-    private int enddate;
+    private long enddate;
     private boolean isRunning;
     private int startdate;
     
     // Constructors
     public FirebaseTimer() {}
 
-    public FirebaseTimer(int enddate, boolean isRunning, int startdate) {
+    public FirebaseTimer(long enddate, boolean isRunning, int startdate) {
         this.enddate = enddate;
         this.isRunning = isRunning;
         this.startdate = startdate;
     }
-    public int getEnddate() {
+    public long getEnddate() {
         return enddate;
     }
-    public void setEnddate(int enddate) {
+    public void setEnddate(long enddate) {
         this.enddate = enddate;
     }
     public boolean getisRunning() {
@@ -32,8 +32,6 @@ public class FirebaseTimer
     }
     public void setStartdate(int startdate) {
         this.startdate = startdate;
-    }
-    
-    
+    }   
 }
 

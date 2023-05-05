@@ -2,40 +2,42 @@ package com.francesco.domotica.app.controller;
 
 import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.francesco.domotica.app.configuration.firebaseConf;
 import com.francesco.domotica.app.model.FirebaseTimer;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 
 
 @RestController
+@CrossOrigin(origins = "http://localhost:4200")
 public class FirebaseController {
 
     @Autowired
     firebaseConf conf;
     Date date;
 
+    
     @PostMapping("/timer")
-    public String createTimer(@RequestBody FirebaseTimer timer){
-        
+    public ResponseEntity<String> createTimer(@RequestBody FirebaseTimer timer){
         conf.writeTimerToFirebase(timer);
-        return "OK";
+
+        return ResponseEntity.ok("OK");
     }
 
     @GetMapping("/timer")
-    public String getTimer() {
+    public ResponseEntity<Date> getTimer() {
         date = conf.getTimer();
-        return date.toString();
+        return ResponseEntity.ok(date);
     }
 
     @GetMapping("/timer/delete")
-    public String deleteTimer() {
+    public ResponseEntity<String> deleteTimer() {
         conf.cancelTimer();
-        return "OK";
+        return ResponseEntity.ok("OK");
     }
-    
-
 }
